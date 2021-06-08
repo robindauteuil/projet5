@@ -1,5 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
+import requests
+import json
 
 
 def connect():
@@ -32,3 +34,15 @@ cursor.execute('show tables')
 
 for x in cursor:
     print(x)
+
+
+
+
+
+url = "https://us.openfoodfacts.org/api/v0/product/5000112519945"
+
+reponse = requests.get(url)
+
+print(reponse)
+
+print(reponse.json())
