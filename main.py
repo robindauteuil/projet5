@@ -1,48 +1,25 @@
-import mysql.connector
-from mysql.connector import Error
-import requests
-import json
+from programme.api_wrapper import *
+from programme.bdd_wrapper import *
 
 
-def connect():
-    """Connect to Mysql database"""
 
+class Controller:
 
-connexion = mysql.connector.connect(
-    host='localhost', user='robin', password=''
-)
+    def __init__(self):
+        self.Open_food_facts = Api()
+        self.Bdd = Data_base()
 
-cursor = connexion.cursor()
+    def loop(self):
 
-cursor.execute(
-    'create database if not exists open_food_facts'
-)
-cursor.execute(
-    'use open_food_facts'
-)
-cursor.execute(
-    'create table if not exists category('
-    'ID smallint unsigned not null auto_increment primary key, name varchar(150) not null '
-    ') engine = innodb;'
-)
-cursor.execute('create table if not exists food_items(ID smallint unsigned not null auto_increment primary key,'
-               ' name varchar(150) not null, category varchar(150) not null, substitute_food varchar (255), description varchar(255), shop varchar(50)) engine = innodb')
-
-cursor.execute(
-    'create table if not exists registred_food(ID smallint unsigned not null auto_increment primary key, name varchar(150)) engine = innodb')
-cursor.execute('show tables')
-
-for x in cursor:
-    print(x)
+        self.Bdd.initialisation()
+        self.Open_food_facts.get_categories()
+        #self.Open_food_facts.get_products_from_a_category('Plats préparés')
+        #print('return', self.Open_food_facts.get_products_from_a_category('Plats préparés'))
+        self.Bdd.insert_products(self.Open_food_facts.get_products_from_a_category('Snacks'))
 
 
 
 
 
-url = "https://us.openfoodfacts.org/api/v0/product/5000112519945"
-
-reponse = requests.get(url)
-
-print(reponse)
-
-print(reponse.json())
+Controll = Controller()
+Controll.loop()
