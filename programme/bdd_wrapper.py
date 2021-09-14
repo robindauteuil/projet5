@@ -31,7 +31,7 @@ class Data_base:
                             ' name varchar(150) , category_ID smallint unsigned , description varchar(255),nutriscore varchar(1), shop varchar(255), brand varchar(255), url text, primary key (ID)) engine = innodb')
 
         self.cursor.execute(
-            'create table if not exists registred_food(ID smallint unsigned not null auto_increment , name varchar(150), primary key (ID)) engine = innodb')
+            'create table if not exists registred_food(ID smallint unsigned not null auto_increment , product varchar(150), substtituant varchar(150), primary key (ID)) engine = innodb')
 
     def insert_products(self, list, nb):
         self.cursor.execute(
@@ -101,12 +101,12 @@ class Data_base:
         # self.cursor.execute(requete)
         self.cursor.execute('select * from category as categorie limit %s offset %s', (20, int(offset)))
         resultat = self.cursor.fetchall()
-        for tuple in resultat:
-            print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
+        # for tuple in resultat:
+        #     print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
 
         self.list_category = resultat
-
-    def show_all_products_from_a_cat(self, category_id, offset):
+        return resultat
+    def select_products(self, category_id, offset):
 
         for tuple in self.list_category:
             nb, name = self.list_category.index(tuple)+1, tuple[1]
@@ -126,8 +126,8 @@ class Data_base:
                 self.cursor.execute(*requete)
         resultat = self.cursor.fetchall()
 
-        for tuple in resultat:
-            print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
+        # for tuple in resultat:
+        #     print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
         return resultat, int_id
 
     def select_a_product(self, id_product, products):
@@ -139,21 +139,38 @@ class Data_base:
                 requete = 'select * from food_items where name = %s '
                 self.cursor.execute(requete, (name,))
                 res = self.cursor.fetchall()
-                print(res)
-                return nb-1
+                #print(res)
 
-        self.connexion.commit()
+                self.connexion.commit()
+                return name,res
 
-    def show_substituants(self, nb, offset):
+    def select_substituants(self, nb, offset, produit):
 
-        requete = ('select * from food_items where category_id = (%s) limit 20 offset %s', (nb, offset))
+        requete = ("select * from food_items where category_id = (%s) and name != %s limit 20 offset %s", (nb, produit, offset))
 
         self.cursor.execute(*requete)
 
         resultat = self.cursor.fetchall()
-        resultat.pop(nb)
-        for tuple in resultat:
-            print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
+        # print('SUBSTITUANT :')
+        # for tuple in resultat:
+        #     print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
+        return resultat
 
+    def select_a_substituant(self, id_substituant, substituants):
+        for tuple in substituants:
+            nb = substituants.index(tuple)+1
+            name = tuple[1]
 
+            if nb == id_substituant:
+                requete = 'select * from food_items where name = %s '
+                self.cursor.execute(requete, (name,))
+                res = self.cursor.fetchall()
+                #print(res)
+                return name, res
+
+    def save_product_substituant(self, product, substituant):
+        requete = 'insert into registred_food(product, substtituant) values(%s, %s)'
+        values = [product, substituant]
+        self.cursor.execute(requete, values)
+        self.connexion.commit()
 
