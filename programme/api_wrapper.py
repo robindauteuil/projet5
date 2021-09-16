@@ -11,6 +11,7 @@ class Api:
         self.category_id = None
         self.id_dict = None
         self.list_categories = None
+
     def get_categories(self):
         name_dict = {}
         id_list = []
@@ -29,7 +30,6 @@ class Api:
                 list_categories.append(categories['name'])
                 n += 1
 
-
         return name_dict, id_list, list_categories
 
     def get_products_from_a_category(self, category_id):
@@ -39,53 +39,79 @@ class Api:
 
         produit = response_category_request['products']
 
-        products_name_list = []
-        categories_products_list = {}
-        nutriscore_list = {}
-        stores_list = {}
-        brands_list = {}
-        list_url = {}
-        description_list = {}
-
-
+        # products_name_list = []
+        # categories_products_list = {}
+        # nutriscore_list = {}
+        # stores_list = {}
+        # brands_list = {}
+        # list_url = {}
+        # description_list = {}
+        list_dict = []
         for products in produit:
+            dict = {}
             nom_produit = (products["product_name"])
-            products_name_list.append(nom_produit)
-
             url_produit = (products['url'])
-            list_url[nom_produit] = url_produit
-
-            categories_produit = (products["categories"])
-            categories_products_list[nom_produit] = categories_produit
-
-            try:
-                nutriscore = products['nutrition_grades']
-            except:
-                nutriscore = 'inconnu'
-            nutriscore_list[nom_produit] = nutriscore
-
+            nutriscore = products['nutrition_grades']
             try:
                 marque = products['brands']
             except:
                 marque = 'marque inconnu'
-            brands_list[nom_produit] = marque
 
             try:
                 magasin_dispo = products['stores']
             except:
                 magasin_dispo = 'magasin inconnu'
-            stores_list[nom_produit] = magasin_dispo
-
-
 
             try:
                 description = products['ecoscore_data']['agribalyse']['name_fr']
             except:
                 description = 'description inconnu'
-            description_list[nom_produit] = description
 
-        return products_name_list, categories_products_list, nutriscore_list, stores_list, brands_list, list_url, description_list
 
+            dict['name'] = nom_produit
+            dict['url'] = url_produit
+            dict['nutriscore'] = nutriscore
+            dict['magasin'] = magasin_dispo
+            dict['marque'] = marque
+            dict['description'] = description
+            list_dict.append(dict)
+        #
+        #     products_name_list.append(nom_produit)
+        #
+        #     url_produit = (products['url'])
+        #     list_url[nom_produit] = url_produit
+        #
+        #     categories_produit = (products["categories"])
+        #     categories_products_list[nom_produit] = categories_produit
+        #
+        #     try:
+        #         nutriscore = products['nutrition_grades']
+        #     except:
+        #         nutriscore = 'inconnu'
+        #     nutriscore_list[nom_produit] = nutriscore
+        #
+        #     try:
+        #         marque = products['brands']
+        #     except:
+        #         marque = 'marque inconnu'
+        #     brands_list[nom_produit] = marque
+        #
+        #     try:
+        #         magasin_dispo = products['stores']
+        #     except:
+        #         magasin_dispo = 'magasin inconnu'
+        #     stores_list[nom_produit] = magasin_dispo
+        #
+        #
+
+            # try:
+            #     description = products['ecoscore_data']['agribalyse']['name_fr']
+            # except:
+            #     description = 'description inconnu'
+            # description_list[nom_produit] = description
+
+        #return products_name_list, categories_products_list, nutriscore_list, stores_list, brands_list, list_url, description_list
+        return  list_dict
     def get_category_id(self, id_list, category_id):
 
         for nb, val in enumerate(id_list, start=1):
@@ -106,9 +132,3 @@ class Api:
 # 6)sélection d'un produit et comparaison produits pour trouver un substitut
 # )enregister un substitut
 # 7)L'utilisateeur peut accéder à sa  base de données
-
-#etat: initial
-#bonjour veuillez selecttionner une option
-#1 creer une relation substituant substitué
-#2voir les relations deja creer
-#3quitter
