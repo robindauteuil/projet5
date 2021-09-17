@@ -12,7 +12,7 @@ class Data_base:
         self.cursor = self.connexion.cursor(buffered=True)
         self.categories_loaded = False
         self.list_category = None
-
+        self.insert_name = []
     def initialisation(self):
         """Connect and create Mysql database"""
 
@@ -39,7 +39,7 @@ class Data_base:
         )
         inserted_names = set()
         for dict in list:
-            if dict['url']  not in inserted_names:
+            if dict['name'] not in self.insert_name:
                 requete = 'insert into food_items (name) value(%s);'
                 value = [dict['name']]
                 self.cursor.execute(requete,value)
@@ -67,7 +67,10 @@ class Data_base:
                 requete = 'update food_items set category_ID = (%s) where name = (%s)'
                 value = [(int(nb), dict['name'])]
                 self.cursor.executemany(requete, value)
-                inserted_names.add(dict['url'])
+                self.insert_name.append(dict['name'])
+                #print(inserted_names)
+            else:
+                print('already insert')
         # products_name_list, categories_products_list, nutriscore_list, stores_list, brands_list, list_url, description_list = list
 
         # for nom_produit in products_name_list:
@@ -203,3 +206,7 @@ class Data_base:
         self.cursor.execute(requete, values)
         self.connexion.commit()
 
+    def select_registred_substituant(self, offset):
+
+        requete = ('select * from registred_food limit 20 offset %s ', offset)
+        self.cursor.execute(*requete)
