@@ -10,9 +10,9 @@ class Data_base:
             host='localhost', user='robin', password=''
         )
         self.cursor = self.connexion.cursor(buffered=True)
-        self.categories_loaded = False
         self.list_category = None
         self.insert_name = []
+
     def initialisation(self):
         """Connect and create Mysql database"""
 
@@ -69,42 +69,7 @@ class Data_base:
                 self.cursor.executemany(requete, value)
                 self.insert_name.append(dict['name'])
                 #print(inserted_names)
-            else:
-                print('already insert')
-        # products_name_list, categories_products_list, nutriscore_list, stores_list, brands_list, list_url, description_list = list
-
-        # for nom_produit in products_name_list:
-        #     if nom_produit not in inserted_names:
-        #         requete = "insert into food_items (name) values (%s);"
-        #         value = [(nom_produit)]
-        #         self.cursor.execute(requete, value)
-        #
-        # for keys, values in nutriscore_list.items():
-        #     requete = "update food_items set nutriscore = (%s) where name = (%s )"
-        #     value = [(values, keys)]
-        #     self.cursor.executemany(requete, value)
-        #
-        # for keys, values in description_list.items():
-        #     requete = "update food_items set description = (%s) where name = (%s )"
-        #     value = [(values, keys)]
-        #     self.cursor.executemany(requete, value)
-        #
-        # for keys, values in stores_list.items():
-        #     requete = "update food_items set shop = (%s) where name = (%s )"
-        #     value = [(values, keys)]
-        #     self.cursor.executemany(requete, value)
-        # #
-        # for keys, values in brands_list.items():
-        #     requete = "update food_items set brand = (%s) where name = (%s )"
-        #     value = [(values, keys)]
-        #     self.cursor.executemany(requete, value)
-        #
-        # for keys, values in list_url.items():
-        #     requete = "update food_items set url = (%s) where name = (%s )"
-        #     value = [(values, keys)]
-        #     self.cursor.executemany(requete, value)
-        #
-
+            
         self.connexion.commit()
         #
 
@@ -116,7 +81,7 @@ class Data_base:
 
         # result = self.cursor.fetchall()
         if result_cat == [(1,)]:
-            self.categories_loaded = True
+            return True
             print('pre_loaded')
 
     def insert_categories(self, list_categories):
@@ -208,5 +173,8 @@ class Data_base:
 
     def select_registred_substituant(self, offset):
 
-        requete = ('select * from registred_food limit 20 offset %s ', offset)
-        self.cursor.execute(*requete)
+        requete = ('select * from registred_food limit 20 offset %s; ')
+        value = offset
+        self.cursor.execute(requete , (offset,))
+        resultat = self.cursor.fetchall()
+        return resultat
