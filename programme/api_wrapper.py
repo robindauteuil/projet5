@@ -24,7 +24,7 @@ class Api:
         n = 1
         for categories in tags_categories:
 
-            if len(name_dict) < 30:
+            if len(name_dict) < 60:
                 name_dict[n] = categories['name']
                 id_list.append(categories['id'])
                 list_categories.append(categories['name'])
