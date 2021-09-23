@@ -10,7 +10,8 @@ class Data_base:
             host='localhost', user='robin', password=''
         )
         self.cursor = self.connexion.cursor(buffered=True)
-        self.insert_name = []
+        self.insert_name = set()
+
 
     def initialisation(self):
         """Connect and create Mysql database"""
@@ -32,40 +33,41 @@ class Data_base:
         self.cursor.execute(
             'create table if not exists registred_food(ID smallint unsigned not null auto_increment , product varchar(150), substtituant varchar(150), primary key (ID)) engine = innodb')
 
-    def insert_products(self, list, nb):
+    def insert_products(self, list_products, nb):
         self.cursor.execute(
             'use open_food_facts'
         )
-        for dict in list:
+
+        for product in list_products:
             if dict['name'] not in self.insert_name:
-                requete = 'insert into food_items (name) value(%s);'
-                value = [dict['name']]
+                requete = 'insert into food_items (name, nutriscore, description, shop, brand, url, category_ID) value(%s,%s,%s,%s,%s,%s,%s);'
+                value = [product['name'],product['nutriscore'], product['description'], product['magasin'], product['marque'], product['url'], int(nb)]
                 self.cursor.execute(requete, value)
 
-                requete = 'update food_items set nutriscore = (%s) where name = (%s )'
-                value = [dict['nutriscore'], dict['name']]
-                self.cursor.execute(requete, value)
-
-                requete = "update food_items set description = (%s) where name = (%s )"
-                value = [dict['description'], dict['name']]
-                self.cursor.execute(requete, value)
-
-                requete = "update food_items set shop = (%s) where name = (%s )"
-                value = [dict['magasin'], dict['name']]
-                self.cursor.execute(requete, value)
-
-                requete = "update food_items set brand = (%s) where name = (%s )"
-                value = [dict['marque'], dict['name']]
-                self.cursor.execute(requete, value)
-
-                requete = "update food_items set url = (%s) where name = (%s )"
-                value = [dict['url'], dict['name']]
-                self.cursor.execute(requete, value)
-
-                requete = 'update food_items set category_ID = (%s) where name = (%s)'
-                value = [(int(nb), dict['name'])]
-                self.cursor.executemany(requete, value)
-                self.insert_name.append(dict['name'])
+                # requete = 'update food_items set nutriscore = (%s) where name = (%s )'
+                # value = [dict['nutriscore'], dict['name']]
+                # self.cursor.execute(requete, value)
+                #
+                # requete = "update food_items set description = (%s) where name = (%s )"
+                # value = [dict['description'], dict['name']]
+                # self.cursor.execute(requete, value)
+                #
+                # requete = "update food_items set shop = (%s) where name = (%s )"
+                # value = [dict['magasin'], dict['name']]
+                # self.cursor.execute(requete, value)
+                #
+                # requete = "update food_items set brand = (%s) where name = (%s )"
+                # value = [dict['marque'], dict['name']]
+                # self.cursor.execute(requete, value)
+                #
+                # requete = "update food_items set url = (%s) where name = (%s )"
+                # value = [dict['url'], dict['name']]
+                # self.cursor.execute(requete, value)
+                #
+                # requete = 'update food_items set category_ID = (%s) where name = (%s)'
+                # value = [(int(nb), dict['name'])]
+                # self.cursor.executemany(requete, value)
+                self.insert_name.add(dict['name'])
                 # print(inserted_names)
 
         self.connexion.commit()
@@ -94,11 +96,21 @@ class Data_base:
         # self.cursor.execute(requete)
         self.cursor.execute('select * from category as categorie limit %s offset %s', (20, int(offset)))
         resultat = self.cursor.fetchall()
-        # for tuple in resultat:
-        #     print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
 
         return resultat
 
+    def select_all_categories(self):
+        self.cursor.execute('select * from category as categorie ')  # limit %s offset %s', (20, int(offset)))
+        resultat = self.cursor.fetchall()
+
+        return len(resultat)
+
+    def select_all_products(self, id_category):
+        requete = ('select * from food_items where category_id = (%s)')
+        value = [id_category]
+        self.cursor.execute(requete, value)
+        resultat = self.cursor.fetchall()
+        return len(resultat)
     def select_products(self, list_categories, category_id, offset):
 
         for tuple in list_categories:
@@ -114,7 +126,7 @@ class Data_base:
                 id = nb.strip('()')
                 re_id = id.strip(',')
                 int_id = int(re_id)
-                requete = ('select * from food_items where category_id = (%s) limit 20 offset %s', (int_id, offset))
+                requete = ('select * from food_items where category_id = (%s)  limit 20 offset %s', (int_id, offset))
                 print('category :', name)
                 self.cursor.execute(*requete)
         resultat = self.cursor.fetchall()
@@ -135,6 +147,12 @@ class Data_base:
 
                 self.connexion.commit()
                 return name, res
+    def select_all_substituants(self, nb_category, produit):
+        requete = ("select * from food_items where category_id = (%s) and name != %s")
+        value = (nb_category, produit)
+        self.cursor.execute(requete, value)
+        resultat = self.cursor.fetchall()
+        return len(resultat)
 
     def select_substituants(self, nb, offset, produit):
 
@@ -175,3 +193,10 @@ class Data_base:
         self.cursor.execute(requete, (offset,))
         resultat = self.cursor.fetchall()
         return resultat
+
+
+    def select_all_registred_substituants(self):
+        requete = ('select * from registred_food ; ')
+        self.cursor.execute(requete)
+        resultat = self.cursor.fetchall()
+        return len(resultat)
