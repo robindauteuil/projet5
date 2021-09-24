@@ -20,7 +20,7 @@ class Controller:
 
     def choose_function(self):
 
-        key = input('1. for choose a product\n2. to check your registred substituants\n\n')
+        key = input('\n1. for choose a product\n2. to check your registred substituants\n\n')
         if key == '1':
             self.function_choose_products = True
         if key == '2':
@@ -49,14 +49,14 @@ class Controller:
         max_index_l = len(l)-1
 
         if offset_indexe == 0:
-            key = input('n for next page')
+            key = input('\n n for next page\n')
 
 
         if offset_indexe not in [0, max_index_l]:
-            key = input('n for next and p for precedent or q to quit')
+            key = input('\n n for next and p for precedent or q to quit\n')
 
         if offset_indexe == max_index_l :
-            key = input('p for precedent')
+            key = input('\n p for precedent\n')
         # else:
         #     key = input('n for next and p for precedent or q to quit')
         if key == "p":
@@ -87,13 +87,13 @@ class Controller:
         max_index_l = len(l) - 1
         if max_index_l != 0:
             if offset_indexe == 0:
-                key = input('n for next page')
+                key = input('\n n for next page\n')
             if offset_indexe == max_index_l:
-                key = input('p for precedent or q to quit')
+                key = input('\n p for precedent or q to quit\n')
             if offset_indexe not in [0, max_index_l]:
-                key = input('n for next and p for precedent or q to quit')
+                key = input('\n n for next and p for precedent or q to quit\n')
         if max_index_l == 0:
-            key = input('select the product with the number')
+            key = input('\n select the product with the number\n')
         if key == "p":
             offset_indexe -= 1
             offset = l[offset_indexe]
@@ -112,7 +112,7 @@ class Controller:
     def show_products(self, list_tuples_products):
 
         for tuple in list_tuples_products:
-            print('{} . {}'.format(list_tuples_products.index(tuple) + 1, tuple[1]))
+            print('{} . {}'.format(list_tuples_products.index(tuple) + 1, tuple))
         #if not list_tuples_products:
 
 
@@ -131,13 +131,13 @@ class Controller:
 
         if max_index_l != 0:
             if offset_indexe == 0:
-                key = input('n for next page')
+                key = input('\n n for next page\n')
             if offset_indexe == max_index_l:
-                key = input('p for precedent or q to quit')
+                key = input('\n p for precedent or q to quit\n')
             if offset_indexe not in [0, max_index_l]:
-                key = input('n for next and p for precedent or q to quit')
+                key = input('\n n for next and p for precedent or q to quit\n')
         if max_index_l == 0:
-            key = input('select the product with the number')
+            key = input('\n select the product with the number')
 
         if key == "p":
             offset_indexe -= 1
@@ -163,13 +163,13 @@ class Controller:
 
         if max_index_l != 0:
             if offset_indexe == 0:
-                key = input('n for next page')
+                key = input('\n n for next page\n')
             if offset_indexe == max_index_l:
-                key = input('p for precedent or q to quit')
+                key = input('\n p for precedent or q to quit\n')
             if offset_indexe not in [0, max_index_l]:
-                key = input('n for next and p for precedent or q to quit')
+                key = input('\n n for next and p for precedent or q to quit\n')
         if max_index_l == 0:
-            key = input('n for next page')
+            key = input('\n q to quite\n')
         if key == "p":
             offset_indexe -= 1
             offset = l[offset_indexe]
@@ -188,7 +188,7 @@ class Controller:
 
         print('SUBSTITUANT :')
         for tuple in list_tuple_substituants:
-            print('{} . {}'.format(list_tuple_substituants.index(tuple) + 1, tuple[1]))
+            print('{} . {}'.format(list_tuple_substituants.index(tuple) + 1, tuple))
 
     def show_product_substituant_selected(self,product, substituant):
 
@@ -197,11 +197,11 @@ class Controller:
     def show_registred_substituants(self, registred):
 
         for tuple in registred:
-            print('{}'.format(tuple))
+            print('Product : {}  /  Substituant : {}'.format(tuple[0], tuple[1]))
 
     def save_in_database(self, product, substituant):
 
-        key = input('voulez vous enregister la paire produit substituant o pour oui, n pour non')
+        key = input('\n voulez vous enregister la paire produit substituant o pour oui, n pour non\n')
         if key == 'o':
             self.bdd.save_product_substituant(product, substituant)
         if key == 'n':
@@ -246,11 +246,12 @@ class Controller:
 
                 while not self.product_chosen:
                     product_on_screen, id_category = self.bdd.select_products(list_categories_on_screen, category_id,self.offset_product)
-                    if len(product_on_screen) < 2:
+                    len_products = self.bdd.select_all_products(id_category)
+                    if len_products < 2:
                         print('No product in this category')
                         break
                     self.show_products(product_on_screen)
-                    len_products = self.bdd.select_all_products(id_category)
+
                     key_product = self.get_product(self.offset_product, len_products)
                 try:
                     name_product, product_selected = self.bdd.select_a_product(key_product, product_on_screen)
@@ -316,6 +317,16 @@ Controll.loop()
 
 # 2voir les relations deja creer
 # affichage produit/subtitut
+# Product : Wild caught chunk light tuna in water  /  Substituant : Solid white albacore
+# Product : Wowen Wheats  /  Substituant : Red Potatoes
+# Product : Freeze Dried Raspberries  /  Substituant : Granny Smith Apples
+# Product : Plain icelandic style skyr strained non-fat yogurt, plain  /  Substituant : Ultra-filtered milk
+# Product : Haselnusskerne gemahlen  /  Substituant : Trader joe's, raw almond butter, crunchy
+# Product : Uncured black forest ham  /  Substituant : Tofu
+# Product : Lentils  /  Substituant : Baked Beans
+# Product : Maranatha, organic raw almond butter creamy  /  Substituant : Crunchy Peanut Butter
+# Product : Food for life, ezekiel 4:9, english muffins, cinnamon raisin  /  Substituant : Food for life, ezekiel 4:9, flax sprouted grain bread
+# Product : Roast beef  /  Substituant : Seasoned cooked roast beef with sea salt & black pepper
 
 
 # to do affichage des produits selectionnés
