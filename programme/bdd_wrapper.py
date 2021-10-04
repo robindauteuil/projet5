@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 import requests
-
+import sqlite3
 
 class Data_base:
     def __init__(self):
@@ -14,6 +14,8 @@ class Data_base:
 
     def initialisation(self):
         """Connect and create Mysql database"""
+        self.cursor.execute('create database if not exists open_food_facts;')
+
 
         self.cursor.execute(
             'create database if not exists open_food_facts'
@@ -27,11 +29,12 @@ class Data_base:
             ') engine = innodb;'
         )
         self.cursor.execute('create table if not exists food_items(ID smallint unsigned not null auto_increment ,'
-                            ' name varchar(150) , category_ID smallint unsigned , description varchar(255),nutriscore varchar(1), shop varchar(255), brand varchar(255), url varchar(500) , primary key (ID  )) engine = innodb')
+                            ' name varchar(255) , category_ID smallint unsigned , description varchar(255),nutriscore varchar(20), shop varchar(255), brand varchar(255), url varchar(500) , primary key (ID  )) engine = innodb')
 
         self.cursor.execute(
             'create table if not exists registred_food(ID smallint unsigned not null auto_increment , product varchar(150), substtituant varchar(150), primary key (ID)) engine = innodb')
 
+        self.connexion.commit()
     def insert_products(self, list_products, nb):
         self.cursor.execute(
             'use open_food_facts'
@@ -39,7 +42,7 @@ class Data_base:
 
         for product in list_products:
             if product['name'] not in self.insert_name:
-                requete = 'insert into food_items (name, nutriscore, description, shop, brand, url, category_ID) value(%s,%s,%s,%s,%s,%s,%s);'
+                requete = 'insert into food_items (name, nutriscore, description, shop, brand, url, category_ID) value (%s,%s,%s,%s,%s,%s,%s);'
                 value = [product['name'], product['nutriscore'], product['description'], product['magasin'],
                          product['marque'], product['url'], int(nb)]
                 self.cursor.execute(requete, value)
@@ -47,7 +50,7 @@ class Data_base:
                 self.insert_name.add(product['name'])
 
         self.connexion.commit()
-        return list
+
 
     def checking_init(self):
 
@@ -67,9 +70,8 @@ class Data_base:
             self.cursor.execute(requete, value)
         self.connexion.commit()
 
-    def select_a_category(self, offset):
+    def select_categories(self, offset):
 
-        # self.cursor.execute(requete)
         self.cursor.execute('select * from category as categorie limit %s offset %s', (20, int(offset)))
         resultat = self.cursor.fetchall()
 
@@ -90,10 +92,9 @@ class Data_base:
 
     def select_products(self, list_categories, category_id, offset):
 
-        for tuple in list_categories:
-            nb, name = list_categories.index(tuple) + 1, tuple[1]
+        for category in list_categories:
+            nb, name = list_categories.index(category) + 1, category[1]
             if nb == category_id:
-                # name = name_category
 
                 requete = 'select ID from category where name = %s '
                 self.cursor.execute(requete, (name,))
@@ -122,12 +123,11 @@ class Data_base:
                 requete = 'select * from food_items where name = %s '
                 self.cursor.execute(requete, (name,))
                 res = self.cursor.fetchall()
-                # print(res)
-
                 self.connexion.commit()
                 return name, res
 
     def select_all_substituants(self, nb_category, produit):
+
         requete = ("select * from food_items where category_id = (%s) and name != %s")
         value = (nb_category, produit)
         self.cursor.execute(requete, value)
@@ -143,9 +143,6 @@ class Data_base:
         self.cursor.execute(*requete)
 
         resultat = self.cursor.fetchall()
-        # print('SUBSTITUANT :')
-        # for tuple in resultat:
-        #     print('{} . {}'.format(resultat.index(tuple) + 1, tuple[1]))
         return resultat
 
     def select_a_substituant(self, id_substituant, substituants):
@@ -158,7 +155,6 @@ class Data_base:
                 requete = 'select * from food_items where name = %s '
                 self.cursor.execute(requete, (name,))
                 res = self.cursor.fetchall()
-                # print(res)
                 return name, res
 
     def save_product_substituant(self, product, substituant):
@@ -168,14 +164,14 @@ class Data_base:
         self.cursor.execute(requete, values)
         self.connexion.commit()
 
-    def select_registred_substituant(self, offset):
+    def select_registered_substituant(self, offset):
 
         requete = ('select product as product, substtituant as substituant from registred_food limit 20 offset %s; ')
         self.cursor.execute(requete, (offset,))
         resultat = self.cursor.fetchall()
         return resultat
 
-    def select_all_registred_substituants(self):
+    def select_all_registered_substituants(self):
         requete = ('select * from registred_food ; ')
         self.cursor.execute(requete)
         resultat = self.cursor.fetchall()

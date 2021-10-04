@@ -20,54 +20,43 @@ class Controller:
 
     def choose_function(self):
 
-        key = input('\n1. for choose a product\n2. to check your registred substituants\n\n')
+        key = input('\n1. to choose a product\n2. to check your registred substituants\n\n')
         if key == '1':
             self.function_choose_products = True
         if key == '2':
             self.function_check_registred_substituant = True
 
-    def tets_show_cate(self, list_tuple_categories, offset):
-        tuple_on_screen = []
-        for tuple in list_tuple_categories:
-            if list_tuple_categories.index(tuple)> offset:
-                if len(tuple_on_screen) <20:
-                    tuple_on_screen.append(tuple)
-        #print(tuple_on_screen)
-        for tuple in tuple_on_screen:
-            print('{} . {}'.format(tuple_on_screen.index(tuple) + 1, tuple[1]))
 
     def show_categories(self, list_tuples_categories):
 
-        for tuple in list_tuples_categories:
-            print('{} . {}'.format(list_tuples_categories.index(tuple) + 1, tuple[1]))
+        for category in list_tuples_categories:
+            print('{} . {}'.format(list_tuples_categories.index(category) + 1, category[1]))
 
-    def get_category(self, offset,nb_categories):
+    def get_category(self, offset, nb_categories):
 
-        l = list(np.arange(20, nb_categories, 20))
-        l.insert(0, 0)
-        offset_indexe = l.index(offset)
-        max_index_l = len(l)-1
+        list_offset = list(np.arange(20, nb_categories, 20))
+        list_offset.insert(0, 0)
+        offset_indexe = list_offset.index(offset)
+        max_index_l = len(list_offset) - 1
 
         if offset_indexe == 0:
             key = input('\n n for next page\n')
-
 
         if offset_indexe not in [0, max_index_l]:
             key = input('\n n for next and p for precedent or q to quit\n')
 
         if offset_indexe == max_index_l :
             key = input('\n p for precedent\n')
-        # else:
-        #     key = input('n for next and p for precedent or q to quit')
+
         if key == "p":
             offset_indexe -= 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_category = offset
 
         if key == 'n':
             offset_indexe += 1
 
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_category = offset
 
         if key.isnumeric():
@@ -77,14 +66,15 @@ class Controller:
 
         if key == 'q':
             self.function_choose_products = False
+            return False
 
 
     def get_product(self, offset, nb_products):
 
-        l = list(np.arange(20, nb_products, 20))
-        l.insert(0, 0)
-        offset_indexe = l.index(offset)
-        max_index_l = len(l) - 1
+        list_offset = list(np.arange(20, nb_products, 20))
+        list_offset.insert(0, 0)
+        offset_indexe = list_offset.index(offset)
+        max_index_l = len(list_offset) - 1
         if max_index_l != 0:
             if offset_indexe == 0:
                 key = input('\n n for next page\n')
@@ -96,12 +86,12 @@ class Controller:
             key = input('\n select the product with the number\n')
         if key == "p":
             offset_indexe -= 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_product = int(offset)
 
         if key == 'n':
             offset_indexe += 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_product = int(offset)
 
         if key.isnumeric():
@@ -111,9 +101,10 @@ class Controller:
 
     def show_products(self, list_tuples_products):
 
-        for tuple in list_tuples_products:
-            print('{} . {}'.format(list_tuples_products.index(tuple) + 1, tuple))
-        #if not list_tuples_products:
+        for product in list_tuples_products:
+            name, description, nutriscore, shop, brand = product
+            print('{} . name : {} / description : {} / nutriscore : {} / shop : {} / brand : {}'.format(list_tuples_products.index(product) + 1, name, description, nutriscore, shop, brand))
+
 
 
 
@@ -124,10 +115,10 @@ class Controller:
 
     def get_a_substituant(self, offset, nb_substituant):
 
-        l = list(np.arange(20, nb_substituant, 20))
-        l.insert(0, 0)
-        offset_indexe = l.index(offset)
-        max_index_l = len(l) - 1
+        list_offset = list(np.arange(20, nb_substituant, 20))
+        list_offset.insert(0, 0)
+        offset_indexe = list_offset.index(offset)
+        max_index_l = len(list_offset) - 1
 
         if max_index_l != 0:
             if offset_indexe == 0:
@@ -141,12 +132,12 @@ class Controller:
 
         if key == "p":
             offset_indexe -= 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_substituant = int(offset)
 
         if key == 'n':
             offset_indexe += 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_substituant = int(offset)
 
         if key.isnumeric():
@@ -156,10 +147,10 @@ class Controller:
 
     def get_registred_food(self, offset, nb_registred):
 
-        l = list(np.arange(20, nb_registred, 20))
-        l.insert(0, 0)
-        offset_indexe = l.index(offset)
-        max_index_l = len(l) - 1
+        list_offset = list(np.arange(20, nb_registred, 20))
+        list_offset.insert(0, 0)
+        offset_indexe = list_offset.index(offset)
+        max_index_l = len(list_offset) - 1
 
         if max_index_l != 0:
             if offset_indexe == 0:
@@ -172,12 +163,12 @@ class Controller:
             key = input('\n q to quite\n')
         if key == "p":
             offset_indexe -= 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_registred_food = int(offset)
 
         if key == 'n':
             offset_indexe += 1
-            offset = l[offset_indexe]
+            offset = list_offset[offset_indexe]
             self.offset_registred_food = int(offset)
 
         if key == 'q':
@@ -186,22 +177,25 @@ class Controller:
 
     def show_subtituants(self, list_tuple_substituants):
 
-        print('SUBSTITUANT :')
-        for tuple in list_tuple_substituants:
-            print('{} . {}'.format(list_tuple_substituants.index(tuple) + 1, tuple))
+        print('Substitutes :')
+        for substituant in list_tuple_substituants:
+            name, description, nutriscore, shop, brand = substituant
+            print('{} . name : {} / description : {} / nutriscore : {} / shop : {} / brand : {}'.format(
+                list_tuple_substituants.index(substituant) + 1, name, description, nutriscore, shop, brand))
+
 
     def show_product_substituant_selected(self,product, substituant):
 
-        print(product,'/',substituant)
+        print('product:',product,'/','substitute:',substituant)
 
     def show_registred_substituants(self, registred):
 
         for tuple in registred:
-            print('Product : {}  /  Substituant : {}'.format(tuple[0], tuple[1]))
+            print('\nProduct : {}  /  substitute : {}'.format(tuple[0], tuple[1]))
 
     def save_in_database(self, product, substituant):
 
-        key = input('\n voulez vous enregister la paire produit substituant o pour oui, n pour non\n')
+        key = input('\n do you want to register the pair product/substitute o for yes, n for no\n')
         if key == 'o':
             self.bdd.save_product_substituant(product, substituant)
         if key == 'n':
@@ -229,18 +223,16 @@ class Controller:
             self.offset_category = 0
             self.offset_product = 0
             self.offset_substituant = 0
-            # self.offset_registred_food = 0
+            self.offset_registred_food = 0
             self.category_chosen = False
             self.product_chosen = False
             self.substituant_chosen = False
             self.choose_function()
-            while self.function_choose_products:
+            while self.function_choose_products is True:
 
                 while not self.category_chosen:
-                    list_categories_on_screen = self.bdd.select_a_category(self.offset_category)
-
+                    list_categories_on_screen = self.bdd.select_categories(self.offset_category)
                     self.show_categories(list_categories_on_screen)
-                    #self.tets_show_cate(list_categories_on_screen, self.offset_category)
                     len_categories = self.bdd.select_all_categories()
                     category_id = self.get_category(self.offset_category, len_categories)
 
@@ -270,65 +262,11 @@ class Controller:
                 self.save_in_database(name_product, name_substituant_selected)
 
             while self.function_check_registred_substituant is True:
-                self.show_registred_substituants(self.bdd.select_registred_substituant(self.offset_registred_food))
-                len_registred_subtituant = self.bdd.select_all_registred_substituants()
-                self.get_registred_food(self.offset_registred_food, len_registred_subtituant)
+                self.show_registered_substituants(self.bdd.select_registered_substituant(self.offset_registred_food))
+                len_registred_subtituant = self.bdd.select_all_registered_substituants()
+                self.get_registered_food(self.offset_registred_food, len_registred_subtituant)
 
 
 Controll = Controller()
 Controll.loop()
 
-# etat: initial
-# bonjour veuillez selectionner une option
-# '1. for choose a product/ 2. to check your registred substituants'
-# 1 creer une relation substituant substitué
-
-# 3quitter
-#
-# #etat : selection des categories avec ID et page precedent, suivante
-# 1.cereale
-# 2.biscotte
-# enter your category ID or n for next and p for precedent
-# (q to go back to the mainmenu)
-#
-# affichage des produits de la catgorie
-
-# enter your product ID or n for next and p for precedent
-# 1,Natural almonds
-# 2,Rice Cakes
-# 3 Original Gourmet Popcorn
-# 4,"Lightly salted organic brown rice puffed grain cakes, lightly salted"
-# 5,Jackpot sea salt popcorn
-##selection du produit avec choix de page
-# Affichage produit sélectionné
-
-
-# Affichage des substituts de la meme categorie
-# 1,Natural almonds
-# 2,Rice Cakes
-# 3 Lightly salted organic brown rice puffed grain cakes, lightly salted
-# 4,Jackpot sea salt popcorn
-# selction du substitut
-# affichage du substitut sélectionné
-# affichage de la paire
-# possibilité d'enregistrer le produit/substitut
-# "voulez vous enregister la paire produit substituant o pour oui, n pour non"
-# enregistrement du substitut
-
-# 2voir les relations deja creer
-# affichage produit/subtitut
-# Product : Wild caught chunk light tuna in water  /  Substituant : Solid white albacore
-# Product : Wowen Wheats  /  Substituant : Red Potatoes
-# Product : Freeze Dried Raspberries  /  Substituant : Granny Smith Apples
-# Product : Plain icelandic style skyr strained non-fat yogurt, plain  /  Substituant : Ultra-filtered milk
-# Product : Haselnusskerne gemahlen  /  Substituant : Trader joe's, raw almond butter, crunchy
-# Product : Uncured black forest ham  /  Substituant : Tofu
-# Product : Lentils  /  Substituant : Baked Beans
-# Product : Maranatha, organic raw almond butter creamy  /  Substituant : Crunchy Peanut Butter
-# Product : Food for life, ezekiel 4:9, english muffins, cinnamon raisin  /  Substituant : Food for life, ezekiel 4:9, flax sprouted grain bread
-# Product : Roast beef  /  Substituant : Seasoned cooked roast beef with sea salt & black pepper
-
-
-# to do affichage des produits selectionnés
-# to do affichage de la paire produit/subtituant
-# fonctionnalité regarder les produits enregistrés
