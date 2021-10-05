@@ -1,9 +1,10 @@
 import mysql.connector
 from mysql.connector import Error
 import requests
-import sqlite3
+
 
 class Data_base:
+
     def __init__(self):
 
         self.connexion = mysql.connector.connect(
@@ -16,25 +17,14 @@ class Data_base:
         """Connect and create Mysql database"""
         self.cursor.execute('create database if not exists open_food_facts;')
 
-
-        self.cursor.execute(
-            'create database if not exists open_food_facts'
-        )
-        self.cursor.execute(
-            'use open_food_facts'
-        )
-        self.cursor.execute(
-            'create table if not exists category('
-            'ID smallint unsigned not null auto_increment primary key, name varchar(150) not null '
-            ') engine = innodb;'
-        )
-        self.cursor.execute('create table if not exists food_items(ID smallint unsigned not null auto_increment ,'
-                            ' name varchar(255) , category_ID smallint unsigned , description varchar(255),nutriscore varchar(20), shop varchar(255), brand varchar(255), url varchar(500) , primary key (ID  )) engine = innodb')
-
-        self.cursor.execute(
-            'create table if not exists registred_food(ID smallint unsigned not null auto_increment , product varchar(150), substtituant varchar(150), primary key (ID)) engine = innodb')
+        bdd = open("C:/Users/robin/OneDrive/Documents/openclass/projet5_Utilisez les données publiques de l'OpenFoodFacts/creation_bdd.sql", 'r')
+        file = bdd.read()
+        requetes = file.split(';')
+        for line in requetes:
+            self.cursor.execute(line)
 
         self.connexion.commit()
+
     def insert_products(self, list_products, nb):
         self.cursor.execute(
             'use open_food_facts'

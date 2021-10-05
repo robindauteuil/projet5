@@ -145,7 +145,7 @@ class Controller:
             self.substituant_chosen = True
             return id_product
 
-    def get_registred_food(self, offset, nb_registred):
+    def get_registered_food(self, offset, nb_registred):
 
         list_offset = list(np.arange(20, nb_registred, 20))
         list_offset.insert(0, 0)
@@ -188,7 +188,7 @@ class Controller:
 
         print('product:',product,'/','substitute:',substituant)
 
-    def show_registred_substituants(self, registred):
+    def show_registered_substituants(self, registred):
 
         for tuple in registred:
             print('\nProduct : {}  /  substitute : {}'.format(tuple[0], tuple[1]))
