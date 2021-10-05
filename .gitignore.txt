@@ -1,0 +1,4 @@
+venv
+carnet_de_bords.txt
+démarche.txt
+__pycache__
