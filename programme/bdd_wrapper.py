@@ -17,9 +17,9 @@ class Data_base:
         """Connect and create Mysql database"""
         self.cursor.execute('create database if not exists open_food_facts;')
 
-        bdd = open("C:/Users/robin/OneDrive/Documents/openclass/projet5_Utilisez les données publiques de l'OpenFoodFacts/creation_bdd.sql", 'r')
-        file = bdd.read()
-        requetes = file.split(';')
+        with open("creation_bdd.sql", 'r') as bdd:
+            file = bdd.read()
+            requetes = file.split(';')
         for line in requetes:
             self.cursor.execute(line)
 
