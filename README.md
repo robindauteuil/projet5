@@ -42,4 +42,6 @@ Mysql et Mysqlconnector pour initialiser et communiquer avec la base de donnée.
 ```
 pip install -r requirements.txt
 python3 __main__.py
+
 ```
+

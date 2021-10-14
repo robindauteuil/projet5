@@ -149,14 +149,14 @@ class Data_base:
 
     def save_product_substituant(self, product, substituant):
 
-        requete = 'insert into registred_food(product, substtituant) values(%s, %s)'
+        requete = 'insert into registred_food(product, substituant) values(%s, %s)'
         values = [product, substituant]
         self.cursor.execute(requete, values)
         self.connexion.commit()
 
     def select_registered_substituant(self, offset):
 
-        requete = ('select product as product, substtituant as substituant from registred_food limit 20 offset %s; ')
+        requete = ('select product as product, substituant as substituant from registred_food limit 20 offset %s; ')
         self.cursor.execute(requete, (offset,))
         resultat = self.cursor.fetchall()
         return resultat
