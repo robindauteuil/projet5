@@ -45,4 +45,4 @@ python3 __main__.py
 
 ```
 
-![Drag Racing](C:\Users\robin\OneDrive\Images\2021-10-14 (3).png)
+![Drag Racing](C:\Users\robin\OneDrive\Images\image_design_bdd.png)
