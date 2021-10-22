@@ -45,4 +45,4 @@ python3 __main__.py
 
 ```
 
-![Drag Racing](C:\Users\robin\OneDrive\Images\image_design_bdd.png)
+![Alt text](C:\Users\robin\OneDrive\Images\image_design_bdd.png?raw=true "image_design_bdd")
