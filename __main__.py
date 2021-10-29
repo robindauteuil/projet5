@@ -248,18 +248,35 @@ class Controller:
                 try:
                     name_product, product_selected = self.bdd.select_a_product(key_product, product_on_screen)
                     self.show_product_selected(product_selected)
-                except UnboundLocalError:
+                    nutriscore_product = self.bdd.select_nutriscore_product(name_product)
+                except :
                     break
+
                 while not self.substituant_chosen:
                     substituant_on_screen = self.bdd.select_substituants(id_category, self.offset_substituant,
-                                                                         name_product)
-                    self.show_subtituants(substituant_on_screen)
-                    len_substituant = self.bdd.select_all_substituants(id_category, name_product)
-                    id_substituant = self.get_a_substituant(self.offset_substituant, len_substituant)
-                name_substituant_selected, substituant_selected = self.bdd.select_a_substituant(id_substituant,
-                                                                                                substituant_on_screen)
-                self.show_product_substituant_selected(product_selected,substituant_selected)
-                self.save_in_database(name_product, name_substituant_selected)
+                                                                         name_product, nutriscore_product)
+
+                    if substituant_on_screen == []:
+                        print('no substitute healthier')
+                        break
+                        self.function_choose_products = False
+
+
+
+                    else:
+                        self.show_subtituants(substituant_on_screen)
+                        len_substituant = self.bdd.select_all_substituants(id_category, name_product, nutriscore_product)
+                        id_substituant = self.get_a_substituant(self.offset_substituant, len_substituant)
+                        name_substituant_selected, substituant_selected = self.bdd.select_a_substituant(id_substituant,
+                                                                                                    substituant_on_screen)
+                try:
+                    self.show_product_substituant_selected(product_selected, substituant_selected)
+                    self.save_in_database(name_product, name_substituant_selected)
+                except UnboundLocalError:
+                    break
+
+
+
 
             while self.function_check_registred_substituant is True:
                 self.show_registered_substituants(self.bdd.select_registered_substituant(self.offset_registred_food))

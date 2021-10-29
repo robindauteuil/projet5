@@ -116,21 +116,34 @@ class Data_base:
                 self.connexion.commit()
                 return name, res
 
-    def select_all_substituants(self, nb_category, produit):
+    def select_nutriscore_product(self, product):
 
-        requete = ("select * from food_items where category_id = (%s) and name != %s")
-        value = (nb_category, produit)
+        requests = 'select nutriscore from food_items where name = %s '
+        self.cursor.execute(requests, (product,))
+        result = self.cursor.fetchall()
+        nutriscore = result[0][0]
+        return (nutriscore)
+
+    def select_all_substituants(self, nb_category, produit, nutriscore):
+
+        requete = ("select * from food_items where category_id = (%s) and nutriscore < %s and name != %s")
+        value = (nb_category,nutriscore, produit)
         self.cursor.execute(requete, value)
         resultat = self.cursor.fetchall()
         return len(resultat)
 
-    def select_substituants(self, nb, offset, produit):
+    def select_substituants(self, nb, offset, produit,nutriscore_product):
+        if nutriscore_product != 'a':
+            requete = (
+                "select name, description, nutriscore, shop, brand from food_items where category_id = (%s) and name != %s and nutriscore < %s limit 20 offset %s",
+                (nb, produit,nutriscore_product, offset))
 
-        requete = (
-            "select name, description, nutriscore, shop, brand from food_items where category_id = (%s) and name != %s limit 20 offset %s",
-            (nb, produit, offset))
-
-        self.cursor.execute(*requete)
+            self.cursor.execute(*requete)
+        if nutriscore_product == 'a':
+            requete = (
+                "select name, description, nutriscore, shop, brand from food_items where category_id = (%s) and name != %s and nutriscore = %s limit 20 offset %s",
+                (nb, produit, nutriscore_product, offset))
+            self.cursor.execute(*requete)
 
         resultat = self.cursor.fetchall()
         return resultat
